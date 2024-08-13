@@ -73,7 +73,7 @@ export default function Table() {
                     <div
                       onClick={() => handleTimeSlotClick(i, j)}
                       key={j}
-                      className={`${baseCellStyle} ${getStatusColor(timeSlot.status)}`}
+                      className={`${baseCellStyle} ${getStatusColor(timeSlot.status)} border-indigo-950`}
                     ></div>
                   );
                 })}
