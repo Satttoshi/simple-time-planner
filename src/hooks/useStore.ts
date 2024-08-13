@@ -7,9 +7,11 @@ type StoreState = {
   setPerson: (person: PersonData) => void;
   // init persons from mongoDB database
   initPersons: () => void;
+  // load persons into mongoDB database
+  loadPersons: () => void;
 };
 
-export const useStore = create<StoreState>()((set) => ({
+export const useStore = create<StoreState>()((set, get) => ({
   persons: [],
   setPersons: (persons) => set({ persons }),
   setPerson: (person) =>
@@ -32,6 +34,24 @@ export const useStore = create<StoreState>()((set) => ({
       set({ persons });
     } catch (error) {
       console.error('Failed to initialize persons:', error);
+    }
+  },
+  loadPersons: async () => {
+    const currentPersons = get().persons;
+    // replace complete DB with current persons
+    try {
+      const response = await fetch('/api/persons', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(currentPersons),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to load persons');
+      }
+    } catch (error) {
+      console.error('Failed to load persons:', error);
     }
   },
 }));

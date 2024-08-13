@@ -22,3 +22,29 @@ export async function GET() {
     );
   }
 }
+
+export async function POST(request: any) {
+  try {
+    await dbConnect();
+
+    const persons = await request.json();
+
+    if (!Array.isArray(persons) || persons.length === 0) {
+      return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+    }
+
+    // Clear the existing collection (optional, depending on your use case)
+    await Person.deleteMany({});
+
+    // Insert new persons into the database
+    const insertedPersons = await Person.insertMany(persons);
+
+    return NextResponse.json(insertedPersons, { status: 201 });
+  } catch (error) {
+    console.error('Error loading persons:', error);
+    return NextResponse.json(
+      { error: 'Failed to load persons' },
+      { status: 500 },
+    );
+  }
+}

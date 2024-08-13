@@ -84,6 +84,12 @@ export default function Table() {
           })}
         </section>
       </div>
+      <button
+        className="bg-blue-600 text-white p-2 rounded-md"
+        onClick={() => useStore.getState().loadPersons()}
+      >
+        UPDATE DB
+      </button>
     </div>
   );
 }
