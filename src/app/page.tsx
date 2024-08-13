@@ -9,7 +9,7 @@ export default function Home() {
   initPersons();
 
   return (
-    <main className="bg-blue-950">
+    <main className="bg-blue-950 text-white">
       <Table />
     </main>
   );
