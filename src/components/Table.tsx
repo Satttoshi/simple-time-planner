@@ -9,20 +9,44 @@ const baseCellStyle = 'border rounded-md grid place-items-center';
 export function getStatusColor(status: Status): string {
   switch (status) {
     case 'notReady':
-      return 'bg-red-600'; // Tailwind class for red color
+      return 'bg-red-600';
     case 'ready':
-      return 'bg-green-600'; // Tailwind class for green color
+      return 'bg-green-600';
     case 'uncertain':
-      return 'bg-yellow-500'; // Tailwind class for yellow color
+      return 'bg-yellow-500';
     default:
-      return ''; // Return an empty string or handle the default case
+      return '';
   }
 }
 
 export default function Table() {
   const persons = useStore((state) => state.persons);
+  const setPerson = useStore((state) => state.setPerson);
 
-  console.log(persons);
+  function handleTimeSlotClick(personIndex: number, timeSlotIndex: number) {
+    const newPersons = [...persons];
+    const currentStatus =
+      newPersons[personIndex].timeSlot[timeSlotIndex].status;
+
+    let nextStatus: Status;
+    switch (currentStatus) {
+      case 'notReady':
+        nextStatus = 'ready';
+        break;
+      case 'ready':
+        nextStatus = 'uncertain';
+        break;
+      case 'uncertain':
+        nextStatus = 'notReady';
+        break;
+      default:
+        nextStatus = 'notReady';
+        break;
+    }
+
+    newPersons[personIndex].timeSlot[timeSlotIndex].status = nextStatus;
+    setPerson(newPersons[personIndex]);
+  }
 
   return (
     <div>
@@ -47,6 +71,7 @@ export default function Table() {
                 {person.timeSlot.map((timeSlot, j) => {
                   return (
                     <div
+                      onClick={() => handleTimeSlotClick(i, j)}
                       key={j}
                       className={`${baseCellStyle} ${getStatusColor(timeSlot.status)}`}
                     ></div>
