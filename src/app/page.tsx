@@ -5,6 +5,7 @@ import { useStore } from '@/hooks/useStore';
 
 export default function Home() {
   const initPersons = useStore((state) => state.initPersons);
+
   initPersons();
 
   return (

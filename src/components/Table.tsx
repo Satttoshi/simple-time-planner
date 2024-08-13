@@ -23,6 +23,8 @@ export default function Table() {
   const persons = useStore((state) => state.persons);
   const setPerson = useStore((state) => state.setPerson);
 
+  console.log(persons);
+
   function handleTimeSlotClick(personIndex: number, timeSlotIndex: number) {
     const newPersons = [...persons];
     const currentStatus =

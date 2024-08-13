@@ -22,30 +22,16 @@ export const useStore = create<StoreState>()((set) => ({
       newPersons[index] = person;
       return { persons: newPersons };
     }),
-  initPersons: () => {
-    // fetch persons from mongoDB database
-    const persons: PersonData[] = [
-      {
-        name: 'Denis',
-        timeSlot: [
-          { time: '18:00', status: 'notReady' },
-          { time: '19:00', status: 'ready' },
-          { time: '20:00', status: 'ready' },
-          { time: '21:00', status: 'notReady' },
-          { time: '22:00', status: 'uncertain' },
-        ],
-      },
-      {
-        name: 'Nina',
-        timeSlot: [
-          { time: '18:00', status: 'notReady' },
-          { time: '19:00', status: 'notReady' },
-          { time: '20:00', status: 'notReady' },
-          { time: '21:00', status: 'notReady' },
-          { time: '22:00', status: 'notReady' },
-        ],
-      },
-    ];
-    set({ persons });
+  initPersons: async () => {
+    try {
+      const response = await fetch('/api/persons');
+      if (!response.ok) {
+        throw new Error('Failed to fetch persons');
+      }
+      const persons: PersonData[] = await response.json();
+      set({ persons });
+    } catch (error) {
+      console.error('Failed to initialize persons:', error);
+    }
   },
 }));
