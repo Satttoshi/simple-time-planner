@@ -28,7 +28,7 @@ export const useStore = create<StoreState>()((set, get) => ({
     try {
       const response = await fetch('/api/persons');
       if (!response.ok) {
-        throw new Error('Failed to fetch persons');
+        console.error('Failed to fetch persons');
       }
       const persons: PersonData[] = await response.json();
       set({ persons });
@@ -38,7 +38,6 @@ export const useStore = create<StoreState>()((set, get) => ({
   },
   loadPersons: async () => {
     const currentPersons = get().persons;
-    // replace complete DB with current persons
     try {
       const response = await fetch('/api/persons', {
         method: 'POST',
@@ -48,7 +47,7 @@ export const useStore = create<StoreState>()((set, get) => ({
         body: JSON.stringify(currentPersons),
       });
       if (!response.ok) {
-        throw new Error('Failed to load persons');
+        console.error('Failed to load persons');
       }
     } catch (error) {
       console.error('Failed to load persons:', error);
