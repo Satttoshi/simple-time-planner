@@ -4,7 +4,7 @@ const timeSlotSchema: Schema = new Schema({
   time: { type: String, required: true },
   status: {
     type: String,
-    enum: ['notReady', 'ready', 'uncertain'],
+    enum: ['init', 'notReady', 'ready', 'uncertain'],
     required: true,
   },
 });

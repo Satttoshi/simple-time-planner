@@ -11,6 +11,8 @@ const baseCellStyle = 'border rounded-md grid place-items-center';
 
 export function getStatusColor(status: Status): string {
   switch (status) {
+    case 'init':
+      return 'bg-gray-600';
     case 'notReady':
       return 'bg-red-600';
     case 'ready':
@@ -25,6 +27,8 @@ export function getStatusColor(status: Status): string {
 export default function Table() {
   const persons = useStore((state) => state.persons);
   const setPerson = useStore((state) => state.setPerson);
+
+  const timeArray = persons[0].timeSlot.map((time) => time.time);
 
   function handleTimeSlotClick(personIndex: number, timeSlotIndex: number) {
     const newPersons = [...persons];
@@ -84,7 +88,7 @@ export default function Table() {
     setPerson(newPersons[0]);
   }
 
-  const timeArray = persons[0].timeSlot.map((time) => time.time);
+  function handleResetTimeslots() {}
 
   return (
     <div>
@@ -133,6 +137,12 @@ export default function Table() {
         onClick={() => useStore.getState().loadPersons()}
       >
         UPDATE DB
+      </button>
+      <button
+        className="bg-blue-600 text-white p-2 rounded-md"
+        onClick={handleResetTimeslots}
+      >
+        RESET TIMESLOTS
       </button>
     </div>
   );

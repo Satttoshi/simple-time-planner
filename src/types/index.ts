@@ -1,4 +1,4 @@
-export type Status = 'notReady' | 'ready' | 'uncertain';
+export type Status = 'init' | 'notReady' | 'ready' | 'uncertain';
 
 type TimeSlot = {
   time: string;
