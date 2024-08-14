@@ -3,6 +3,9 @@
 import { useStore } from '@/hooks/useStore';
 import { Fragment } from 'react';
 import { Status } from '@/types';
+import PlusIcon from '@/assets/plus-circle.svg';
+import colors from 'tailwindcss/colors';
+import TableHead from '@/components/TableHead';
 
 const baseCellStyle = 'border rounded-md grid place-items-center';
 
@@ -22,8 +25,6 @@ export function getStatusColor(status: Status): string {
 export default function Table() {
   const persons = useStore((state) => state.persons);
   const setPerson = useStore((state) => state.setPerson);
-
-  console.log(persons);
 
   function handleTimeSlotClick(personIndex: number, timeSlotIndex: number) {
     const newPersons = [...persons];
@@ -50,6 +51,39 @@ export default function Table() {
     setPerson(newPersons[personIndex]);
   }
 
+  function handleInsertRow(isAbove: boolean) {
+    const newPersons = [...persons];
+
+    const currentTime = isAbove
+      ? timeArray[0]
+      : timeArray[timeArray.length - 1];
+    const splitTime = currentTime.split(':');
+    const newHour = isAbove
+      ? parseInt(splitTime[0]) - 1
+      : parseInt(splitTime[0]) + 1;
+    const newTime = `${newHour}:00`;
+
+    if (isAbove && newTime === '0:00') {
+      return;
+    }
+
+    if (!isAbove && newTime === '24:00') {
+      return;
+    }
+
+    if (isAbove) {
+      newPersons.forEach((person) => {
+        person.timeSlot.unshift({ time: newTime, status: 'notReady' });
+      });
+    } else {
+      newPersons.forEach((person) => {
+        person.timeSlot.push({ time: newTime, status: 'notReady' });
+      });
+    }
+
+    setPerson(newPersons[0]);
+  }
+
   const timeArray = persons[0].timeSlot.map((time) => time.time);
 
   return (
@@ -59,9 +93,20 @@ export default function Table() {
         className="bg-indigo-950 p-2"
         style={{ width: '100vw', height: '70vh' }}
       >
-        <section className="grid grid-cols-6 grid-rows-6 gap-1 h-full">
+        <section
+          className={`grid grid-cols-6 grid-rows-${timeArray.length + 1} gap-1 h-full`}
+        >
           {/* Row 1 - Header with Person Names */}
-          <div className={`${baseCellStyle}`}></div>
+          <button
+            onClick={() => handleInsertRow(true)}
+            className={`${baseCellStyle}`}
+          >
+            <PlusIcon
+              width={28}
+              height={28}
+              style={{ fill: colors.white, outline: 'none' }}
+            />
+          </button>
           {persons.map((person, i) => (
             <div key={i} className={`${baseCellStyle}`}>
               {person.name}
@@ -89,15 +134,6 @@ export default function Table() {
       >
         UPDATE DB
       </button>
-    </div>
-  );
-}
-
-function TableHead() {
-  return (
-    <div className="flex-col justify-center items-center">
-      <h1 className="text-2xl text-center">August 2024 KW 55</h1>
-      <h2 className="text-center">Montag 18</h2>
     </div>
   );
 }
