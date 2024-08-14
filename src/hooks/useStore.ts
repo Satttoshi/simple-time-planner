@@ -9,6 +9,7 @@ type StoreState = {
   initPersons: () => void;
   // load persons into mongoDB database
   loadPersons: () => void;
+  loading: boolean;
 };
 
 export const useStore = create<StoreState>()((set, get) => ({
@@ -34,6 +35,8 @@ export const useStore = create<StoreState>()((set, get) => ({
       set({ persons });
     } catch (error) {
       console.error('Failed to initialize persons:', error);
+    } finally {
+      set({ loading: false });
     }
   },
   loadPersons: async () => {
@@ -53,4 +56,5 @@ export const useStore = create<StoreState>()((set, get) => ({
       console.error('Failed to load persons:', error);
     }
   },
+  loading: true,
 }));

@@ -50,6 +50,8 @@ export default function Table() {
     setPerson(newPersons[personIndex]);
   }
 
+  const timeArray = persons[0].timeSlot.map((time) => time.time);
+
   return (
     <div>
       <TableHead />
@@ -58,30 +60,27 @@ export default function Table() {
         style={{ width: '100vw', height: '70vh' }}
       >
         <section className="grid grid-cols-6 grid-rows-6 gap-1 h-full">
-          {/* Row 1 */}
+          {/* Row 1 - Header with Person Names */}
           <div className={`${baseCellStyle}`}></div>
-          <div className={`${baseCellStyle}`}>18:00</div>
-          <div className={`${baseCellStyle}`}>19:00</div>
-          <div className={`${baseCellStyle}`}>20:00</div>
-          <div className={`${baseCellStyle}`}>21:00</div>
-          <div className={`${baseCellStyle}`}>22:00</div>
+          {persons.map((person, i) => (
+            <div key={i} className={`${baseCellStyle}`}>
+              {person.name}
+            </div>
+          ))}
 
-          {persons.map((person, i) => {
-            return (
-              <Fragment key={i}>
-                <div className={`${baseCellStyle}`}>{person.name}</div>
-                {person.timeSlot.map((timeSlot, j) => {
-                  return (
-                    <div
-                      onClick={() => handleTimeSlotClick(i, j)}
-                      key={j}
-                      className={`${baseCellStyle} ${getStatusColor(timeSlot.status)} border-indigo-950`}
-                    ></div>
-                  );
-                })}
-              </Fragment>
-            );
-          })}
+          {/* Row 2...n Time Slots */}
+          {timeArray.map((time, i) => (
+            <Fragment key={i}>
+              <div className={`${baseCellStyle}`}>{time}</div>
+              {persons.map((person, j) => (
+                <div
+                  onClick={() => handleTimeSlotClick(j, i)}
+                  key={j}
+                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-indigo-950`}
+                ></div>
+              ))}
+            </Fragment>
+          ))}
         </section>
       </div>
       <button
