@@ -19,7 +19,6 @@ export default function Home() {
       <main className="bg-background text-foreground h-screen flex flex-col max-w-[800px] mx-auto w-full">
         {loading ? <SkeletonCard /> : <AppContent />}
       </main>
-
       <Toaster />
     </>
   );

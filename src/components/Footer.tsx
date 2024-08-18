@@ -2,8 +2,8 @@ import { Button } from '@/components/ui/button';
 
 type TableActionsProps = {
   hasChanges: boolean;
-  onUpdateDB: () => void;
-  onResetTimeslots: () => void;
+  onUpdateDB?: () => void;
+  onResetTimeslots?: () => void;
 };
 
 export default function Footer({
