@@ -1,19 +1,20 @@
 'use client';
 
+import { useToast } from '@/components/ui/use-toast';
 import { useStore } from '@/hooks/useStore';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Status, TimeSlot } from '@/types';
 import PlusIcon from '@/assets/plus-circle.svg';
 import colors from 'tailwindcss/colors';
 import TableHead from '@/components/TableHead';
-import { toast } from 'react-toastify';
+import TableActions from '@/components/TableActions';
 
-const baseCellStyle = 'border rounded-md grid place-items-center';
+const baseCellStyle = 'border rounded-md grid place-items-center h-20';
 
 export function getStatusColor(status: Status): string {
   switch (status) {
     case 'init':
-      return 'bg-gray-600';
+      return 'bg-accent';
     case 'notReady':
       return 'bg-red-600';
     case 'ready':
@@ -26,6 +27,10 @@ export function getStatusColor(status: Status): string {
 }
 
 export default function Table() {
+  const { toast } = useToast();
+
+  const [hasChanges, setHasChanges] = useState(false);
+
   const persons = useStore((state) => state.persons);
   const setPerson = useStore((state) => state.setPerson);
   const setPersons = useStore((state) => state.setPersons);
@@ -58,6 +63,7 @@ export default function Table() {
     }
 
     newPersons[personIndex].timeSlot[timeSlotIndex].status = nextStatus;
+    setHasChanges(true);
     setPerson(newPersons[personIndex]);
   }
 
@@ -91,6 +97,7 @@ export default function Table() {
       });
     }
 
+    setHasChanges(true);
     setPersons(newPersons);
   }
 
@@ -110,25 +117,26 @@ export default function Table() {
           timeSlot.time === '23:00',
       );
     });
+    setHasChanges(true);
     setPersons(newPersons);
   }
 
   function handleUpdateDB() {
+    setHasChanges(false);
     loadPersons();
-    toast('DB Updated');
+    toast({
+      title: 'Update Successful',
+      description: 'Smu die Kuh',
+      duration: 3000,
+    });
   }
 
   return (
-    <div>
+    <>
       <TableHead />
-      <div
-        className="bg-indigo-950 p-2"
-        style={{ width: '100vw', height: '70vh' }}
-      >
-        <section
-          className={`grid grid-cols-6 grid-rows-${timeArray.length + 1} gap-1 h-full`}
-        >
-          {/* Row 1 - Header with Person Names */}
+      <section className="p-3 flex flex-col pb-2">
+        {/* Row 1 - Header with Person Names */}
+        <div className="mb-1 grid grid-cols-6 gap-1">
           <button
             onClick={() => handleInsertRow(true)}
             className={`${baseCellStyle}`}
@@ -144,8 +152,12 @@ export default function Table() {
               {person.name}
             </div>
           ))}
+        </div>
 
-          {/* Row 2...n Time Slots */}
+        {/* Row 2...n Time Slots */}
+        <div
+          className={`grid h-[calc(100vh-246px)] w-[calc(100%+7px)] grid-cols-6 grid-rows-${timeArray.length} gap-1 auto-rows-max justify-start content-star overflow-y-scroll scrollbar-custom`}
+        >
           {timeArray.map((time, i) => (
             <Fragment key={i + '-fragment'}>
               <div className={`${baseCellStyle}`}>{time}</div>
@@ -153,25 +165,20 @@ export default function Table() {
                 <div
                   onClick={() => handleTimeSlotClick(j, i)}
                   key={j + '-timeslot-' + i}
-                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-indigo-950`}
+                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-background`}
                 ></div>
               ))}
             </Fragment>
           ))}
-        </section>
-      </div>
-      <button
-        className="bg-blue-600 text-white p-2 rounded-md"
-        onClick={handleUpdateDB}
-      >
-        UPDATE DB
-      </button>
-      <button
-        className="bg-blue-600 text-white p-2 rounded-md"
-        onClick={handleResetTimeslots}
-      >
-        RESET TIMESLOTS
-      </button>
-    </div>
+        </div>
+        <div className="h-12"></div>
+      </section>
+      <div className="h-[72px]"></div>
+      <TableActions
+        onUpdateDB={handleUpdateDB}
+        onResetTimeslots={handleResetTimeslots}
+        hasChanges={hasChanges}
+      />
+    </>
   );
 }
