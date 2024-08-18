@@ -14,5 +14,18 @@ const personSchema: Schema = new Schema({
   timeSlot: [timeSlotSchema],
 });
 
-export default mongoose.models.Person ||
-  mongoose.model('Person', personSchema, 'persons');
+const daySchema: Schema = new Schema({
+  date: { type: String, required: true },
+  persons: [personSchema],
+});
+
+const weekSchema: Schema = new Schema({
+  week: { type: Number, required: true },
+  days: [daySchema],
+});
+
+export const Person =
+  mongoose.models.Person || mongoose.model('Persons', personSchema, 'persons');
+
+export const Week =
+  mongoose.models.Week || mongoose.model('Weeks', weekSchema, 'weeks');

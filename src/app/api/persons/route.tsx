@@ -1,13 +1,14 @@
 import dbConnect from '@/db/connect';
-import Person from '@/db/models';
+import { Person } from '@/db/models';
 import { NextResponse } from 'next/server';
+import { PersonData } from '@/types';
 
 export async function GET() {
   try {
     await dbConnect();
 
     console.log('fetching all persons ...');
-    const persons = await Person.find();
+    const persons: PersonData[] = await Person.find();
 
     if (!persons) {
       return NextResponse.json({ error: 'No data found' }, { status: 404 });
@@ -27,7 +28,7 @@ export async function POST(request: any) {
   try {
     await dbConnect();
 
-    const persons = await request.json();
+    const persons: PersonData[] = await request.json();
 
     if (!Array.isArray(persons) || persons.length === 0) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
