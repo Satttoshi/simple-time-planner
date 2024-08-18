@@ -1,12 +1,12 @@
 'use client';
 
+import { useToast } from '@/components/ui/use-toast';
 import { useStore } from '@/hooks/useStore';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import { Status, TimeSlot } from '@/types';
 import PlusIcon from '@/assets/plus-circle.svg';
 import colors from 'tailwindcss/colors';
 import TableHead from '@/components/TableHead';
-import { toast } from 'react-toastify';
 import TableActions from '@/components/TableActions';
 
 const baseCellStyle = 'border rounded-md grid place-items-center';
@@ -14,7 +14,7 @@ const baseCellStyle = 'border rounded-md grid place-items-center';
 export function getStatusColor(status: Status): string {
   switch (status) {
     case 'init':
-      return 'bg-gray-600';
+      return 'bg-accent';
     case 'notReady':
       return 'bg-red-600';
     case 'ready':
@@ -27,6 +27,10 @@ export function getStatusColor(status: Status): string {
 }
 
 export default function Table() {
+  const { toast } = useToast();
+
+  const [hasChanges, setHasChanges] = useState(false);
+
   const persons = useStore((state) => state.persons);
   const setPerson = useStore((state) => state.setPerson);
   const setPersons = useStore((state) => state.setPersons);
@@ -59,6 +63,7 @@ export default function Table() {
     }
 
     newPersons[personIndex].timeSlot[timeSlotIndex].status = nextStatus;
+    setHasChanges(true);
     setPerson(newPersons[personIndex]);
   }
 
@@ -92,6 +97,7 @@ export default function Table() {
       });
     }
 
+    setHasChanges(true);
     setPersons(newPersons);
   }
 
@@ -111,19 +117,25 @@ export default function Table() {
           timeSlot.time === '23:00',
       );
     });
+    setHasChanges(true);
     setPersons(newPersons);
   }
 
   function handleUpdateDB() {
+    setHasChanges(false);
     loadPersons();
-    toast('DB Updated');
+    toast({
+      title: 'Update Successful',
+      description: 'Smu die Kuh',
+      duration: 3000,
+    });
   }
 
   return (
     <div>
       <TableHead />
       <div
-        className="bg-indigo-950 p-2"
+        className="bg-background p-2"
         style={{ width: '100vw', height: '70vh' }}
       >
         <section
@@ -154,7 +166,7 @@ export default function Table() {
                 <div
                   onClick={() => handleTimeSlotClick(j, i)}
                   key={j + '-timeslot-' + i}
-                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-indigo-950`}
+                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-background`}
                 ></div>
               ))}
             </Fragment>
@@ -164,6 +176,7 @@ export default function Table() {
       <TableActions
         onUpdateDB={handleUpdateDB}
         onResetTimeslots={handleResetTimeslots}
+        hasChanges={hasChanges}
       />
     </div>
   );

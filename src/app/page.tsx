@@ -3,7 +3,7 @@
 import Table from '@/components/Table';
 import { useStore } from '@/hooks/useStore';
 import { useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
+import { Toaster } from '@/components/ui/toaster';
 import 'react-toastify/dist/ReactToastify.css';
 
 export default function Home() {
@@ -16,21 +16,10 @@ export default function Home() {
 
   return (
     <>
-      <ToastContainer
-        position="bottom-center"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      />
-      <main className="bg-blue-950 text-white">
+      <main className="bg-background text-foreground">
         {loading ? <h2>loading</h2> : <Table />}
       </main>
+      <Toaster />
     </>
   );
 }
