@@ -9,7 +9,7 @@ import colors from 'tailwindcss/colors';
 import TableHead from '@/components/TableHead';
 import TableActions from '@/components/TableActions';
 
-const baseCellStyle = 'border rounded-md grid place-items-center';
+const baseCellStyle = 'border rounded-md grid place-items-center h-20';
 
 export function getStatusColor(status: Status): string {
   switch (status) {
@@ -132,16 +132,11 @@ export default function Table() {
   }
 
   return (
-    <div>
+    <>
       <TableHead />
-      <div
-        className="bg-background p-2"
-        style={{ width: '100vw', height: '70vh' }}
-      >
-        <section
-          className={`grid grid-cols-6 grid-rows-${timeArray.length + 1} gap-1 h-full`}
-        >
-          {/* Row 1 - Header with Person Names */}
+      <section className="p-3 flex flex-col pb-2">
+        {/* Row 1 - Header with Person Names */}
+        <div className="mb-1 grid grid-cols-6 gap-1">
           <button
             onClick={() => handleInsertRow(true)}
             className={`${baseCellStyle}`}
@@ -157,8 +152,12 @@ export default function Table() {
               {person.name}
             </div>
           ))}
+        </div>
 
-          {/* Row 2...n Time Slots */}
+        {/* Row 2...n Time Slots */}
+        <div
+          className={`grid h-[calc(100vh-246px)] w-[calc(100%+7px)] grid-cols-6 grid-rows-${timeArray.length} gap-1 auto-rows-max justify-start content-star overflow-y-scroll scrollbar-custom`}
+        >
           {timeArray.map((time, i) => (
             <Fragment key={i + '-fragment'}>
               <div className={`${baseCellStyle}`}>{time}</div>
@@ -171,13 +170,15 @@ export default function Table() {
               ))}
             </Fragment>
           ))}
-        </section>
-      </div>
+        </div>
+        <div className="h-12"></div>
+      </section>
+      <div className="h-[72px]"></div>
       <TableActions
         onUpdateDB={handleUpdateDB}
         onResetTimeslots={handleResetTimeslots}
         hasChanges={hasChanges}
       />
-    </div>
+    </>
   );
 }

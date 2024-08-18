@@ -49,7 +49,7 @@ function TableHead() {
   const year = currentDate.getFullYear();
 
   return (
-    <div className="flex-col justify-center items-center">
+    <div className="flex-col justify-center items-center p-2">
       <h1 className="text-2xl text-center">{`${month} ${year} W-${weekNumber}`}</h1>
       <h2 className="text-center">{`${dayName} ${day}`}</h2>
     </div>
