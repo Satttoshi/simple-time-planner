@@ -3,7 +3,7 @@ import dbConnect from '@/db/connect';
 import { Week } from '@/db/models';
 import { WeekData } from '@/types';
 
-// api/weeks?week=<number>
+// api/week?week=<number>
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const week = url.searchParams.get('week');
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
   }
 }
 
-// api/weeks?week=<number>
+// api/week?week=<number>
 export async function POST(request: Request) {
   const url = new URL(request.url);
   const week = url.searchParams.get('week');
@@ -51,20 +51,20 @@ export async function POST(request: Request) {
     await dbConnect();
 
     if (!week || isNaN(Number(week))) {
-      // if there is no week query parameter, then it is considered to add multiple weeks
-      const weeks: WeekData[] = await request.json();
-
-      if (!Array.isArray(weeks) || weeks.length === 0) {
-        return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
-      }
-
-      // delete only those with matching week numbers
+      return NextResponse.json(
+        { error: 'No week provided as query parameter' },
+        { status: 400 },
+      );
     }
 
     const weekNumber = Number(week);
     const weekData = await request.json();
 
-    if (!Array.isArray(weekData.days) || weekData.days.length === 0) {
+    if (
+      !Array.isArray(weekData.days) ||
+      weekData.days.length === 0 ||
+      weekData.week !== weekNumber
+    ) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
 
