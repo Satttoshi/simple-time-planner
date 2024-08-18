@@ -6,7 +6,7 @@ type TableActionsProps = {
   onResetTimeslots: () => void;
 };
 
-export default function TableActions({
+export default function Footer({
   hasChanges,
   onUpdateDB,
   onResetTimeslots,
