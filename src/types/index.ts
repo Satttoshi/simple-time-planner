@@ -1,6 +1,6 @@
 export type Status = 'init' | 'notReady' | 'ready' | 'uncertain';
 
-type TimeSlot = {
+export type TimeSlot = {
   time: string;
   status: Status;
 };

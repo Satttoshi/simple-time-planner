@@ -41,6 +41,7 @@ export const useStore = create<StoreState>()((set, get) => ({
   },
   loadPersons: async () => {
     const currentPersons = get().persons;
+    console.log('loading persons with', currentPersons);
     try {
       const response = await fetch('/api/persons', {
         method: 'POST',

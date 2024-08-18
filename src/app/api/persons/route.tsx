@@ -33,7 +33,6 @@ export async function POST(request: any) {
       return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
     }
 
-    // Clear the existing collection (optional, depending on your use case)
     await Person.deleteMany({});
 
     // Insert new persons into the database
