@@ -49,6 +49,9 @@ export default function Table() {
         nextStatus = 'uncertain';
         break;
       case 'uncertain':
+        nextStatus = 'init';
+        break;
+      case 'init':
         nextStatus = 'notReady';
         break;
       default:
@@ -90,7 +93,7 @@ export default function Table() {
       });
     }
 
-    setPerson(newPersons[0]);
+    setPersons(newPersons);
   }
 
   function handleResetTimeslots() {
@@ -100,8 +103,15 @@ export default function Table() {
         ...timeSlot,
         status: 'init',
       }));
+      person.timeSlot = person.timeSlot.filter(
+        (timeSlot) =>
+          timeSlot.time === '19:00' ||
+          timeSlot.time === '20:00' ||
+          timeSlot.time === '21:00' ||
+          timeSlot.time === '22:00' ||
+          timeSlot.time === '23:00',
+      );
     });
-
     setPersons(newPersons);
   }
 
