@@ -7,6 +7,7 @@ import PlusIcon from '@/assets/plus-circle.svg';
 import colors from 'tailwindcss/colors';
 import TableHead from '@/components/TableHead';
 import { toast } from 'react-toastify';
+import TableActions from '@/components/TableActions';
 
 const baseCellStyle = 'border rounded-md grid place-items-center';
 
@@ -160,18 +161,10 @@ export default function Table() {
           ))}
         </section>
       </div>
-      <button
-        className="bg-blue-600 text-white p-2 rounded-md"
-        onClick={handleUpdateDB}
-      >
-        UPDATE DB
-      </button>
-      <button
-        className="bg-blue-600 text-white p-2 rounded-md"
-        onClick={handleResetTimeslots}
-      >
-        RESET TIMESLOTS
-      </button>
+      <TableActions
+        onUpdateDB={handleUpdateDB}
+        onResetTimeslots={handleResetTimeslots}
+      />
     </div>
   );
 }
