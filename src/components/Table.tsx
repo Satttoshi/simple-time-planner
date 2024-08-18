@@ -2,10 +2,11 @@
 
 import { useStore } from '@/hooks/useStore';
 import { Fragment } from 'react';
-import { Status } from '@/types';
+import { Status, TimeSlot } from '@/types';
 import PlusIcon from '@/assets/plus-circle.svg';
 import colors from 'tailwindcss/colors';
 import TableHead from '@/components/TableHead';
+import { toast } from 'react-toastify';
 
 const baseCellStyle = 'border rounded-md grid place-items-center';
 
@@ -27,6 +28,10 @@ export function getStatusColor(status: Status): string {
 export default function Table() {
   const persons = useStore((state) => state.persons);
   const setPerson = useStore((state) => state.setPerson);
+  const setPersons = useStore((state) => state.setPersons);
+  const loadPersons = useStore((state) => state.loadPersons);
+
+  console.log('Table mounted');
 
   const timeArray = persons[0].timeSlot.map((time) => time.time);
 
@@ -77,18 +82,35 @@ export default function Table() {
 
     if (isAbove) {
       newPersons.forEach((person) => {
-        person.timeSlot.unshift({ time: newTime, status: 'notReady' });
+        person.timeSlot.unshift({ time: newTime, status: 'init' });
       });
     } else {
       newPersons.forEach((person) => {
-        person.timeSlot.push({ time: newTime, status: 'notReady' });
+        person.timeSlot.push({ time: newTime, status: 'init' });
       });
     }
 
     setPerson(newPersons[0]);
   }
 
-  function handleResetTimeslots() {}
+  function handleResetTimeslots() {
+    const newPersons = [...persons];
+    newPersons.forEach((person) => {
+      person.timeSlot = person.timeSlot.map((timeSlot: TimeSlot) => ({
+        ...timeSlot,
+        status: 'init',
+      }));
+    });
+
+    setPersons(newPersons);
+  }
+
+  function handleUpdateDB() {
+    loadPersons();
+    toast('DB Updated');
+  }
+
+  console.log('remounted persons', persons);
 
   return (
     <div>
@@ -112,19 +134,19 @@ export default function Table() {
             />
           </button>
           {persons.map((person, i) => (
-            <div key={i} className={`${baseCellStyle}`}>
+            <div key={i + '-name'} className={`${baseCellStyle}`}>
               {person.name}
             </div>
           ))}
 
           {/* Row 2...n Time Slots */}
           {timeArray.map((time, i) => (
-            <Fragment key={i}>
+            <Fragment key={i + '-fragment'}>
               <div className={`${baseCellStyle}`}>{time}</div>
               {persons.map((person, j) => (
                 <div
                   onClick={() => handleTimeSlotClick(j, i)}
-                  key={j}
+                  key={j + '-timeslot-' + i}
                   className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-indigo-950`}
                 ></div>
               ))}
@@ -134,7 +156,7 @@ export default function Table() {
       </div>
       <button
         className="bg-blue-600 text-white p-2 rounded-md"
-        onClick={() => useStore.getState().loadPersons()}
+        onClick={handleUpdateDB}
       >
         UPDATE DB
       </button>
