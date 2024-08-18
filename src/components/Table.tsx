@@ -31,8 +31,6 @@ export default function Table() {
   const setPersons = useStore((state) => state.setPersons);
   const loadPersons = useStore((state) => state.loadPersons);
 
-  console.log('Table mounted');
-
   const timeArray = persons[0].timeSlot.map((time) => time.time);
 
   function handleTimeSlotClick(personIndex: number, timeSlotIndex: number) {
@@ -119,8 +117,6 @@ export default function Table() {
     loadPersons();
     toast('DB Updated');
   }
-
-  console.log('remounted persons', persons);
 
   return (
     <div>
