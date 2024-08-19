@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 type TableActionsProps = {
   hasChanges: boolean;
   onUpdateDB?: () => void;
-  onResetTimeslots?: () => void;
+  onResetTimeslots: (day: string) => void;
 };
 
 export default function Footer({
@@ -17,7 +17,7 @@ export default function Footer({
         <Button
           className="w-24"
           variant="destructive"
-          onClick={onResetTimeslots}
+          onClick={() => onResetTimeslots('2024-08-26T00:00:00Z')}
         >
           Reset day
         </Button>

@@ -5,26 +5,29 @@ import 'swiper/css';
 import { useToast } from '@/components/ui/use-toast';
 import { useStore } from '@/hooks/useStore';
 import { useState } from 'react';
-import { Status, TimeSlot } from '@/types';
 import TableHead from '@/components/TableHead';
 import Footer from '@/components/Footer';
 import Table from '@/components/Table';
+import { PersonData, Status } from '@/types';
 
 export default function AppContent() {
   const { toast } = useToast();
-
   const [hasChanges, setHasChanges] = useState(false);
 
-  const persons = useStore((state) => state.persons);
-  const setPerson = useStore((state) => state.setPerson);
-  const setPersons = useStore((state) => state.setPersons);
-  const loadPersons = useStore((state) => state.loadPersons);
-
+  const updateWeeksInDB = useStore((state) => state.updateWeeksInDB);
   const weeks = useStore((state) => state.weeks);
+  const setPersonsInDay = useStore((state) => state.setPersonsInDay);
 
-  const timeArray = persons[0].timeSlot.map((time) => time.time);
+  const getDayFromWeeks = useStore((state) => state.getDayFromWeeks);
 
-  function handleTimeSlotClick(personIndex: number, timeSlotIndex: number) {
+  console.log(getDayFromWeeks('2024-08-26T00:00:00Z'));
+
+  function handleTimeSlotClick(
+    persons: PersonData[],
+    personIndex: number,
+    timeSlotIndex: number,
+    day: string,
+  ) {
     const newPersons = [...persons];
     const currentStatus =
       newPersons[personIndex].timeSlot[timeSlotIndex].status;
@@ -50,10 +53,12 @@ export default function AppContent() {
 
     newPersons[personIndex].timeSlot[timeSlotIndex].status = nextStatus;
     setHasChanges(true);
-    setPerson(newPersons[personIndex]);
+
+    setPersonsInDay(newPersons, day);
   }
 
-  function handleInsertRow(isAbove: boolean) {
+  function handleInsertRow(isAbove: boolean, day: string) {
+    /*
     const newPersons = [...persons];
 
     const currentTime = isAbove
@@ -85,10 +90,11 @@ export default function AppContent() {
 
     setHasChanges(true);
     setPersons(newPersons);
+    */
   }
 
-  function handleResetTimeslots() {
-    const newPersons = [...persons];
+  function handleResetTimeslots(day: string) {
+    /*const newPersons = [...persons];
     newPersons.forEach((person) => {
       person.timeSlot = person.timeSlot.map((timeSlot: TimeSlot) => ({
         ...timeSlot,
@@ -105,11 +111,12 @@ export default function AppContent() {
     });
     setHasChanges(true);
     setPersons(newPersons);
+     */
   }
 
   function handleUpdateDB() {
     setHasChanges(false);
-    loadPersons();
+    updateWeeksInDB();
     toast({
       title: 'Update Successful',
       description: 'Smu die Kuh',
@@ -129,8 +136,8 @@ export default function AppContent() {
             <SwiperSlide key={day.date + '_table'}>
               <TableHead day={day.date} />
               <Table
-                timeArray={timeArray}
-                persons={persons}
+                day={day.date}
+                persons={day.persons}
                 onInsertRow={handleInsertRow}
                 onTimeSlotClick={handleTimeSlotClick}
               />

@@ -7,14 +7,12 @@ import { Toaster } from '@/components/ui/toaster';
 import SkeletonCard from '@/components/SkeletonCard';
 
 export default function Home() {
-  const initPersons = useStore((state) => state.initPersons);
   const loading = useStore((state) => state.loading);
   const initWeeks = useStore((state) => state.initWeeks);
 
   useEffect(() => {
-    initPersons();
     initWeeks();
-  }, [initPersons, initWeeks]);
+  }, [initWeeks]);
 
   return (
     <>

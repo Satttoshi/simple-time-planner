@@ -21,25 +21,32 @@ export function getStatusColor(status: Status): string {
 const baseCellStyle = 'border rounded-md grid place-items-center h-20';
 
 type TableProps = {
-  onInsertRow: (arg0: boolean) => void;
-  onTimeSlotClick: (arg0: number, arg1: number) => void;
+  day: string;
+  onInsertRow: (isAbove: boolean, day: string) => void;
+  onTimeSlotClick: (
+    persons: PersonData[],
+    personIndex: number,
+    timeSlotIndex: number,
+    day: string,
+  ) => void;
   persons: PersonData[];
-  timeArray: string[];
 };
 
 export default function Table({
+  day,
   onInsertRow,
   onTimeSlotClick,
   persons,
-  timeArray,
 }: TableProps) {
+  const timeArray = persons[0].timeSlot.map((time) => time.time);
+
   return (
     <>
       <section className="p-3 flex flex-col pb-2">
         {/* Row 1 - Header with Person Names */}
         <div className="mb-1 grid grid-cols-6 gap-1">
           <button
-            onClick={() => onInsertRow(true)}
+            onClick={() => onInsertRow(true, '2024-08-26T00:00:00Z')}
             className={`${baseCellStyle}`}
           >
             <PlusIcon
@@ -64,7 +71,7 @@ export default function Table({
               <div className={`${baseCellStyle}`}>{time}</div>
               {persons.map((person, j) => (
                 <div
-                  onClick={() => onTimeSlotClick(j, i)}
+                  onClick={() => onTimeSlotClick(persons, j, i, day)}
                   key={j + '-timeslot-' + i}
                   className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-background`}
                 ></div>

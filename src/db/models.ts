@@ -27,8 +27,5 @@ const weekSchema: Schema = new Schema({
   days: [daySchema],
 });
 
-export const Person =
-  mongoose.models.Person || mongoose.model('Persons', personSchema, 'persons');
-
 export const Week =
   mongoose.models.Week || mongoose.model('Weeks', weekSchema, 'weeks');

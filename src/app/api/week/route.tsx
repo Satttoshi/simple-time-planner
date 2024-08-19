@@ -51,10 +51,18 @@ export async function POST(request: Request) {
     await dbConnect();
 
     if (!week || isNaN(Number(week))) {
-      return NextResponse.json(
-        { error: 'No week provided as query parameter' },
-        { status: 400 },
-      );
+      // if there is no week query parameter, then update all weeks
+      console.log('No Query parameter, updating all weeks ...');
+      const weeksData: WeekData[] = await request.json();
+
+      if (!Array.isArray(weeksData) || weeksData.length === 0) {
+        return NextResponse.json({ error: 'Invalid data' }, { status: 400 });
+      }
+
+      await Week.deleteMany({});
+
+      const response = await Week.insertMany(weeksData);
+      return NextResponse.json(response, { status: 201 });
     }
 
     const weekNumber = Number(week);
