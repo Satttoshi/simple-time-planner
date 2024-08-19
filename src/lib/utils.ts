@@ -1,6 +1,22 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
+}
+
+export function getTodayIsoDate() {
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  // remove milliseconds .000 from IsoString but leave the Z at the end
+  return today.toISOString().slice(0, -5) + 'Z';
+}
+
+export function getWeekNumber(date: Date) {
+  const today = new Date(date);
+  today.setUTCHours(0, 0, 0, 0);
+  const firstDayOfYear = new Date(today.getUTCFullYear(), 0, 1);
+  const pastDaysOfYear =
+    (today.valueOf() - firstDayOfYear.valueOf()) / 86400000;
+  return Math.ceil((pastDaysOfYear + firstDayOfYear.getUTCDay() + 1) / 7);
 }

@@ -1,5 +1,7 @@
 'use client';
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
 import { useToast } from '@/components/ui/use-toast';
 import { useStore } from '@/hooks/useStore';
 import { useState } from 'react';
@@ -17,6 +19,8 @@ export default function AppContent() {
   const setPerson = useStore((state) => state.setPerson);
   const setPersons = useStore((state) => state.setPersons);
   const loadPersons = useStore((state) => state.loadPersons);
+
+  const weeks = useStore((state) => state.weeks);
 
   const timeArray = persons[0].timeSlot.map((time) => time.time);
 
@@ -115,13 +119,25 @@ export default function AppContent() {
 
   return (
     <>
-      <TableHead />
-      <Table
-        timeArray={timeArray}
-        persons={persons}
-        onInsertRow={handleInsertRow}
-        onTimeSlotClick={handleTimeSlotClick}
-      />
+      <Swiper
+        spaceBetween={0}
+        slidesPerView={1}
+        style={{ width: '100%', height: '100%' }}
+      >
+        {weeks.map((week) =>
+          week.days.map((day) => (
+            <SwiperSlide key={day.date + '_table'}>
+              <TableHead day={day.date} />
+              <Table
+                timeArray={timeArray}
+                persons={persons}
+                onInsertRow={handleInsertRow}
+                onTimeSlotClick={handleTimeSlotClick}
+              />
+            </SwiperSlide>
+          )),
+        )}
+      </Swiper>
       <Footer
         onUpdateDB={handleUpdateDB}
         onResetTimeslots={handleResetTimeslots}

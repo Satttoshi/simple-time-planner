@@ -9,10 +9,12 @@ import SkeletonCard from '@/components/SkeletonCard';
 export default function Home() {
   const initPersons = useStore((state) => state.initPersons);
   const loading = useStore((state) => state.loading);
+  const initWeeks = useStore((state) => state.initWeeks);
 
   useEffect(() => {
     initPersons();
-  }, [initPersons]);
+    initWeeks();
+  }, [initPersons, initWeeks]);
 
   return (
     <>
