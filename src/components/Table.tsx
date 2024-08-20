@@ -22,7 +22,12 @@ const baseCellStyle = 'border rounded-md grid place-items-center h-20';
 
 type TableProps = {
   day: string;
-  onInsertRow: (isAbove: boolean, day: string) => void;
+  onInsertRow: (
+    persons: PersonData[],
+    timeArray: string[],
+    isAbove: boolean,
+    day: string,
+  ) => void;
   onTimeSlotClick: (
     persons: PersonData[],
     personIndex: number,
@@ -42,11 +47,13 @@ export default function Table({
 
   return (
     <>
-      <section className="p-3 flex flex-col pb-2">
+      <section className="p-3 flex flex-col pb-[84px]">
         {/* Row 1 - Header with Person Names */}
         <div className="mb-1 grid grid-cols-6 gap-1">
           <button
-            onClick={() => onInsertRow(true, '2024-08-26T00:00:00Z')}
+            onClick={() =>
+              onInsertRow(persons, timeArray, true, '2024-08-26T00:00:00Z')
+            }
             className={`${baseCellStyle}`}
           >
             <PlusIcon
@@ -79,9 +86,7 @@ export default function Table({
             </Fragment>
           ))}
         </div>
-        <div className="h-12"></div>
       </section>
-      <div className="h-[72px]"></div>
     </>
   );
 }

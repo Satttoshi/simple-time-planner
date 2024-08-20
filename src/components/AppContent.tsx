@@ -8,7 +8,7 @@ import { useState } from 'react';
 import TableHead from '@/components/TableHead';
 import Footer from '@/components/Footer';
 import Table from '@/components/Table';
-import { PersonData, Status } from '@/types';
+import { PersonData, Status, TimeSlot } from '@/types';
 
 export default function AppContent() {
   const { toast } = useToast();
@@ -20,8 +20,6 @@ export default function AppContent() {
 
   const getDayFromWeeks = useStore((state) => state.getDayFromWeeks);
 
-  console.log(getDayFromWeeks('2024-08-26T00:00:00Z'));
-
   function handleTimeSlotClick(
     persons: PersonData[],
     personIndex: number,
@@ -29,6 +27,9 @@ export default function AppContent() {
     day: string,
   ) {
     const newPersons = [...persons];
+
+    if (!newPersons[personIndex].timeSlot) return; // should never happen, for TS only
+
     const currentStatus =
       newPersons[personIndex].timeSlot[timeSlotIndex].status;
 
@@ -57,8 +58,12 @@ export default function AppContent() {
     setPersonsInDay(newPersons, day);
   }
 
-  function handleInsertRow(isAbove: boolean, day: string) {
-    /*
+  function handleInsertRow(
+    persons: PersonData[],
+    timeArray: string[],
+    isAbove: boolean,
+    day: string,
+  ) {
     const newPersons = [...persons];
 
     const currentTime = isAbove
@@ -80,38 +85,43 @@ export default function AppContent() {
 
     if (isAbove) {
       newPersons.forEach((person) => {
-        person.timeSlot.unshift({ time: newTime, status: 'init' });
+        person.timeSlot?.unshift({ time: newTime, status: 'init' });
       });
     } else {
       newPersons.forEach((person) => {
-        person.timeSlot.push({ time: newTime, status: 'init' });
+        person.timeSlot?.push({ time: newTime, status: 'init' });
       });
     }
 
     setHasChanges(true);
-    setPersons(newPersons);
-    */
+    setPersonsInDay(newPersons, day);
   }
 
   function handleResetTimeslots(day: string) {
-    /*const newPersons = [...persons];
+    console.log('Resetting timeslots for day:', day);
+    const selectedDay = getDayFromWeeks(day);
+    if (!selectedDay) {
+      console.error('Day not found');
+      return;
+    }
+    const persons = selectedDay.persons;
+    const newPersons = [...persons];
     newPersons.forEach((person) => {
-      person.timeSlot = person.timeSlot.map((timeSlot: TimeSlot) => ({
+      person.timeSlot = person.timeSlot?.map((timeSlot: TimeSlot) => ({
         ...timeSlot,
         status: 'init',
       }));
-      person.timeSlot = person.timeSlot.filter(
-        (timeSlot) =>
-          timeSlot.time === '19:00' ||
-          timeSlot.time === '20:00' ||
-          timeSlot.time === '21:00' ||
-          timeSlot.time === '22:00' ||
-          timeSlot.time === '23:00',
-      );
+      delete person.timeSlot;
+      person.timeSlot = [
+        { time: '19:00', status: 'init' },
+        { time: '20:00', status: 'init' },
+        { time: '21:00', status: 'init' },
+        { time: '22:00', status: 'init' },
+        { time: '23:00', status: 'init' },
+      ];
     });
     setHasChanges(true);
-    setPersons(newPersons);
-     */
+    setPersonsInDay(newPersons, day);
   }
 
   function handleUpdateDB() {
