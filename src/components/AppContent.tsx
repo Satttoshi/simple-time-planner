@@ -9,6 +9,8 @@ import TableHead from '@/components/TableHead';
 import Footer from '@/components/Footer';
 import Table from '@/components/Table';
 import { PersonData, Status, TimeSlot } from '@/types';
+import type { Swiper as SwiperType } from 'swiper/types';
+import { findDayIndex, getTodayIsoDate } from '@/lib/utils';
 
 export default function AppContent() {
   const { toast } = useToast();
@@ -17,8 +19,9 @@ export default function AppContent() {
   const updateWeeksInDB = useStore((state) => state.updateWeeksInDB);
   const weeks = useStore((state) => state.weeks);
   const setPersonsInDay = useStore((state) => state.setPersonsInDay);
-
   const getDayFromWeeks = useStore((state) => state.getDayFromWeeks);
+
+  const initialSwiperIndex = findDayIndex(weeks, getTodayIsoDate());
 
   function handleTimeSlotClick(
     persons: PersonData[],
@@ -140,6 +143,7 @@ export default function AppContent() {
         spaceBetween={0}
         slidesPerView={1}
         style={{ width: '100%', height: '100%' }}
+        onAfterInit={(swiper: SwiperType) => swiper.slideTo(initialSwiperIndex)}
       >
         {weeks.map((week) =>
           week.days.map((day) => (
