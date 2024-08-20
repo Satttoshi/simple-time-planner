@@ -1,24 +1,11 @@
-import { useEffect, useState } from 'react';
+import { getTodayIsoDate } from '@/lib/utils';
 
-function TableHead() {
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [weekNumber, setWeekNumber] = useState(0);
+type TableHeadProps = {
+  // date in Iso format
+  day: string;
+};
 
-  useEffect(() => {
-    // Set the current date
-    setCurrentDate(new Date());
-
-    // Calculate the week number
-    const getWeekNumber = (date: Date) => {
-      const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-      const pastDaysOfYear =
-        (date.getTime() - firstDayOfYear.getTime()) / 86400000;
-      return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
-    };
-
-    setWeekNumber(getWeekNumber(currentDate));
-  }, []);
-
+function TableHead({ day }: TableHeadProps) {
   const monthNames = [
     'January',
     'February',
@@ -43,15 +30,30 @@ function TableHead() {
     'Saturday',
   ];
 
-  const month = monthNames[currentDate.getMonth()];
-  const dayName = dayNames[currentDate.getDay()];
-  const day = currentDate.getDate();
-  const year = currentDate.getFullYear();
+  const date = new Date(day);
+
+  if (isNaN(date.getTime())) {
+    console.error('Invalid date format provided:', day);
+    return (
+      <div className="flex-col justify-center items-center p-2">
+        <h1 className="text-2xl text-center">Invalid Date</h1>
+      </div>
+    );
+  }
+
+  const month = monthNames[date.getUTCMonth()];
+  const year = date.getUTCFullYear();
+  const dayName = dayNames[date.getUTCDay()];
+  const dayNumber = date.getUTCDate();
+
+  const isToday = day === getTodayIsoDate();
 
   return (
-    <div className="flex-col justify-center items-center p-2">
-      <h1 className="text-2xl text-center">{`${month} ${year} W-${weekNumber}`}</h1>
-      <h2 className="text-center">{`${dayName} ${day}`}</h2>
+    <div
+      className={`${isToday && 'bg-accent'} flex-col justify-center items-center p-2`}
+    >
+      <h1 className="text-xl text-center">{`${dayName}`}</h1>
+      <h2 className="text-center">{`${dayNumber}. ${month} ${year}`}</h2>
     </div>
   );
 }

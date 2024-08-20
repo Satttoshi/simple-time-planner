@@ -5,4 +5,14 @@ export type TimeSlot = {
   status: Status;
 };
 
-export type PersonData = { name: string; timeSlot: TimeSlot[] };
+export type PersonData = { name: string; timeSlot?: TimeSlot[] };
+
+export type DayData = {
+  date: string;
+  persons: PersonData[];
+};
+
+export type WeekData = {
+  week: number;
+  days: DayData[];
+};

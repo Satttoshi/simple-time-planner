@@ -1,0 +1,203 @@
+openapi: 3.0.0
+info:
+  title: Week and Day Data API
+  version: 1.0.0
+  description: API to manage week and day data for persons and their time slots.
+
+servers:
+  - url: http://localhost:3000/api
+
+components:
+  schemas:
+    Status:
+      type: string
+      enum:
+        - init
+        - notReady
+        - ready
+        - uncertain
+      example: ready
+
+    TimeSlot:
+      type: object
+      properties:
+        time:
+          type: string
+          description: Time of the slot in HH:mm format.
+          example: "14:00"
+        status:
+          $ref: '#/components/schemas/Status'
+
+    PersonData:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the person.
+          example: John Doe
+        timeSlot:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSlot'
+
+    DayData:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Date in ISO 8601 format (YYYY-MM-DD).
+          example: "2024-08-19"
+        persons:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonData'
+
+    WeekData:
+      type: object
+      properties:
+        week:
+          type: integer
+          description: Week number in the year.
+          example: 34
+        days:
+          type: array
+          items:
+            $ref: '#/components/schemas/DayData'
+
+  responses:
+    ErrorResponse:
+      description: Error response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: No data found
+
+paths:
+  /day:
+    get:
+      summary: Get day data by date
+      description: Retrieves day data based on the provided date.
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+            description: Date in ISO 8601 format (YYYY-MM-DD).
+          required: true
+          example: "2024-08-19"
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DayData'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+
+    post:
+      summary: Update day data by date
+      description: Updates the day data based on the provided date.
+      parameters:
+        - in: query
+          name: date
+          schema:
+            type: string
+            format: date
+            description: Date in ISO 8601 format (YYYY-MM-DD).
+          required: true
+          example: "2024-08-19"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DayData'
+      responses:
+        '201':
+          description: Day data updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  acknowledged:
+                    type: boolean
+                    example: true
+                  modifiedCount:
+                    type: integer
+                    example: 1
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+
+  /week:
+    get:
+      summary: Get week data by week number
+      description: Retrieves week data based on the provided week number. If no week number is provided, it returns all weeks.
+      parameters:
+        - in: query
+          name: week
+          schema:
+            type: integer
+            description: Week number in the year.
+          required: false
+          example: 34
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/WeekData'
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/WeekData'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'
+
+    post:
+      summary: Insert or update week data by week number
+      description: Inserts or updates week data based on the provided week number.
+      parameters:
+        - in: query
+          name: week
+          schema:
+            type: integer
+            description: Week number in the year.
+          required: true
+          example: 34
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WeekData'
+      responses:
+        '201':
+          description: Week data created or updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WeekData'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '500':
+          $ref: '#/components/responses/ErrorResponse'

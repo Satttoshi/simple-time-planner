@@ -1,61 +1,105 @@
 import { create } from 'zustand';
-import { PersonData } from '@/types';
+import { DayData, PersonData, WeekData } from '@/types';
+import { getTodayIsoDate } from '@/lib/utils';
+import { parseWeekRange } from '@/lib/utils';
 
 type StoreState = {
-  persons: PersonData[];
-  setPersons: (persons: PersonData[]) => void;
-  setPerson: (person: PersonData) => void;
-  // init persons from mongoDB database
-  initPersons: () => void;
-  // load persons into mongoDB database
-  loadPersons: () => void;
+  setPersonsInDay: (persons: PersonData[], day: string) => void;
+
   loading: boolean;
+
+  updateWeeksInDB: () => void;
+
+  weeks: WeekData[];
+  setWeeks: (weeks: WeekData[]) => void;
+  setWeek: (week: WeekData) => void;
+  initWeeks: () => void;
+
+  getDayFromWeeks: (day: string) => DayData | undefined;
+
+  selectedDayDate: string;
+  setSelectedDayDate: (day: string) => void;
 };
 
 export const useStore = create<StoreState>()((set, get) => ({
-  persons: [],
-  setPersons: (persons) => set({ persons }),
-  setPerson: (person) =>
+  setPersonsInDay: (persons, day) => {
     set((state) => {
-      const index = state.persons.findIndex((p) => p.name === person.name);
-      if (index === -1) {
+      const currentDay = get().getDayFromWeeks(day);
+      if (!currentDay) {
         return state;
       }
-      const newPersons = [...state.persons];
-      newPersons[index] = person;
-      return { persons: newPersons };
-    }),
-  initPersons: async () => {
-    try {
-      const response = await fetch('/api/persons');
-      if (!response.ok) {
-        console.error('Failed to fetch persons');
-      }
-      const persons: PersonData[] = await response.json();
-      set({ persons });
-    } catch (error) {
-      console.error('Failed to initialize persons:', error);
-    } finally {
-      set({ loading: false });
-    }
+      const newDay = { ...currentDay, persons };
+      const newWeeks = state.weeks.map((week) => {
+        if (week.days.some((d) => d.date === day)) {
+          return {
+            ...week,
+            days: week.days.map((d) => (d.date === day ? newDay : d)),
+          };
+        }
+        return week;
+      });
+      return { weeks: newWeeks };
+    });
   },
-  loadPersons: async () => {
-    const currentPersons = get().persons;
-    console.log('loading persons with', currentPersons);
+
+  updateWeeksInDB: async () => {
+    const currentWeeks = get().weeks;
+    console.log('updating weeks...');
     try {
-      const response = await fetch('/api/persons', {
+      const response = await fetch('/api/week', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(currentPersons),
+        body: JSON.stringify(currentWeeks),
       });
       if (!response.ok) {
-        console.error('Failed to load persons');
+        console.error('Failed to update weeks');
       }
     } catch (error) {
-      console.error('Failed to load persons:', error);
+      console.error('Failed to update weeks:', error);
     }
   },
+
   loading: true,
+
+  weeks: [],
+  setWeeks: (weeks) => set({ weeks }),
+  setWeek: (week) => {
+    set((state) => {
+      const index = state.weeks.findIndex((w) => w.week === week.week);
+      if (index === -1) {
+        return state;
+      }
+      const newWeeks = [...state.weeks];
+      newWeeks[index] = week;
+      return { weeks: newWeeks };
+    });
+  },
+
+  initWeeks: async () => {
+    try {
+      const response = await fetch('/api/week');
+      if (!response.ok) {
+        console.error('Failed to fetch weeks');
+      }
+      const data: WeekData[] = await response.json();
+
+      const weeks = parseWeekRange(data);
+      set({ weeks });
+    } catch (error) {
+      console.error('Failed to initialize weeks:', error);
+    }
+
+    set({ loading: false });
+  },
+
+  getDayFromWeeks: (day) => {
+    return get()
+      .weeks.flatMap((week) => week.days)
+      .find((d) => d.date === day);
+  },
+
+  selectedDayDate: getTodayIsoDate(),
+  setSelectedDayDate: (day) => set({ selectedDayDate: day }),
 }));

@@ -1,22 +1,23 @@
 'use client';
 
-import Table from '@/components/Table';
+import AppContent from '@/components/AppContent';
 import { useStore } from '@/hooks/useStore';
 import { useEffect } from 'react';
 import { Toaster } from '@/components/ui/toaster';
+import SkeletonCard from '@/components/SkeletonCard';
 
 export default function Home() {
-  const initPersons = useStore((state) => state.initPersons);
   const loading = useStore((state) => state.loading);
+  const initWeeks = useStore((state) => state.initWeeks);
 
   useEffect(() => {
-    initPersons();
-  }, [initPersons]);
+    initWeeks();
+  }, [initWeeks]);
 
   return (
     <>
       <main className="bg-background text-foreground h-screen flex flex-col max-w-[800px] mx-auto w-full">
-        {loading ? <h2>loading</h2> : <Table />}
+        {loading ? <SkeletonCard /> : <AppContent />}
       </main>
       <Toaster />
     </>
