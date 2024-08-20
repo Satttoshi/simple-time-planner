@@ -24,6 +24,7 @@ export default function AppContent() {
   const weeks = useStore((state) => state.weeks);
   const setPersonsInDay = useStore((state) => state.setPersonsInDay);
   const getDayFromWeeks = useStore((state) => state.getDayFromWeeks);
+  const selectedDayDate = useStore((state) => state.selectedDayDate);
   const setSelectedDayDate = useStore((state) => state.setSelectedDayDate);
 
   const initialSwiperIndex = findDayIndexByDate(weeks, getTodayIsoDate());
@@ -164,6 +165,7 @@ export default function AppContent() {
                 persons={day.persons}
                 onInsertRow={handleInsertRow}
                 onTimeSlotClick={handleTimeSlotClick}
+                selectedDayDate={selectedDayDate}
               />
             </SwiperSlide>
           )),

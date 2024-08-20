@@ -35,6 +35,7 @@ type TableProps = {
     day: string,
   ) => void;
   persons: PersonData[];
+  selectedDayDate: string;
 };
 
 export default function Table({
@@ -42,7 +43,10 @@ export default function Table({
   onInsertRow,
   onTimeSlotClick,
   persons,
+  selectedDayDate,
 }: TableProps) {
+  if (!persons[0].timeSlot) return; // should never happen, for TS only
+
   const timeArray = persons[0].timeSlot.map((time) => time.time);
 
   return (
@@ -52,7 +56,7 @@ export default function Table({
         <div className="mb-1 grid grid-cols-6 gap-1">
           <button
             onClick={() =>
-              onInsertRow(persons, timeArray, true, '2024-08-26T00:00:00Z')
+              onInsertRow(persons, timeArray, true, selectedDayDate)
             }
             className={`${baseCellStyle}`}
           >
@@ -80,7 +84,7 @@ export default function Table({
                 <div
                   onClick={() => onTimeSlotClick(persons, j, i, day)}
                   key={j + '-timeslot-' + i}
-                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot[i].status)} border-background`}
+                  className={`${baseCellStyle} ${getStatusColor(person.timeSlot?.[i].status ?? 'init')} border-background`}
                 ></div>
               ))}
             </Fragment>
