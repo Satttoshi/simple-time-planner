@@ -16,8 +16,8 @@ type StoreState = {
 
   getDayFromWeeks: (day: string) => DayData | undefined;
 
-  selectedDay: string;
-  setSelectedDay: (day: string) => void;
+  selectedDayDate: string;
+  setSelectedDayDate: (day: string) => void;
 };
 
 export const useStore = create<StoreState>()((set, get) => ({
@@ -97,6 +97,6 @@ export const useStore = create<StoreState>()((set, get) => ({
       .find((d) => d.date === day);
   },
 
-  selectedDay: getTodayIsoDate(),
-  setSelectedDay: (day) => set({ selectedDay: day }),
+  selectedDayDate: getTodayIsoDate(),
+  setSelectedDayDate: (day) => set({ selectedDayDate: day }),
 }));

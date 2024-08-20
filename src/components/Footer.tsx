@@ -12,7 +12,7 @@ export default function Footer({
   onUpdateDB,
   onResetTimeslots,
 }: TableActionsProps) {
-  const selectedDay = useStore((state) => state.selectedDay);
+  const selectedDayDate = useStore((state) => state.selectedDayDate);
 
   return (
     <div className="z-50 w-full bg-accent fixed bottom-0 left-0 right-0 grid place-items-center">
@@ -22,7 +22,7 @@ export default function Footer({
           variant="destructive"
           onClick={() =>
             onResetTimeslots
-              ? onResetTimeslots(selectedDay)
+              ? onResetTimeslots(selectedDayDate)
               : console.log('No reset function provided!')
           }
         >

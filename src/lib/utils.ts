@@ -25,6 +25,13 @@ export function getWeekNumber(date: Date) {
 /**
  * Find the index of a day in the weeks array by date
  */
-export function findDayIndex(weeks: WeekData[], date: string) {
+export function findDayIndexByDate(weeks: WeekData[], date: string) {
   return weeks.flatMap((week) => week.days).findIndex((d) => d.date === date);
+}
+
+/**
+ * Find the date of a day in the weeks array by index
+ */
+export function findDayDateByIndex(weeks: WeekData[], index: number) {
+  return weeks.flatMap((week) => week.days)[index].date;
 }
