@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { DayData, PersonData, WeekData } from '@/types';
 import { getTodayIsoDate } from '@/lib/utils';
+import { parseWeekRange } from '@/lib/utils';
 
 type StoreState = {
   setPersonsInDay: (persons: PersonData[], day: string) => void;
@@ -75,20 +76,22 @@ export const useStore = create<StoreState>()((set, get) => ({
       return { weeks: newWeeks };
     });
   },
+
   initWeeks: async () => {
     try {
       const response = await fetch('/api/week');
       if (!response.ok) {
         console.error('Failed to fetch weeks');
       }
-      const weeks: WeekData[] = await response.json();
+      const data: WeekData[] = await response.json();
+
+      const weeks = parseWeekRange(data);
       set({ weeks });
-      console.log(get().weeks);
     } catch (error) {
       console.error('Failed to initialize weeks:', error);
-    } finally {
-      set({ loading: false });
     }
+
+    set({ loading: false });
   },
 
   getDayFromWeeks: (day) => {

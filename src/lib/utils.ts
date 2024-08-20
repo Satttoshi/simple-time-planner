@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { WeekData } from '@/types';
+import { DayData, PersonData, WeekData } from '@/types';
+import { defaultConfig } from '@/config';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -72,4 +73,55 @@ export function findDayIndexByDate(weeks: WeekData[], date: string) {
  */
 export function findDayDateByIndex(weeks: WeekData[], index: number) {
   return weeks.flatMap((week) => week.days)[index].date;
+}
+
+function createDay(dayDate: string): DayData {
+  const persons: PersonData[] = defaultConfig.persons.map((name) => ({
+    name,
+    timeSlot: [
+      { time: '19:00', status: 'init' },
+      { time: '20:00', status: 'init' },
+      { time: '21:00', status: 'init' },
+      { time: '22:00', status: 'init' },
+      { time: '23:00', status: 'init' },
+    ],
+  }));
+
+  return {
+    date: dayDate,
+    persons: persons,
+  };
+}
+
+function createWeek(weekNumber: number): WeekData {
+  const dayDates = getDayIsoDatesByWeekNumber(weekNumber);
+  const days = dayDates.map(createDay);
+
+  return {
+    week: weekNumber,
+    days: days,
+  };
+}
+
+/**
+ * A function which alters the current weeks in just the current weekNumber and -1 and +1,
+ * if a week in range is not present already, it will be created. with the util function createWeek
+ * and if a week is out of range it will be deleted.
+ * If a week is the last week of the year, it will be created in the next year
+ *
+ */
+export function parseWeekRange(weeks: WeekData[]): WeekData[] {
+  const copiedWeeks = [...weeks];
+
+  const todayWeekNumber = getWeekNumberByDate(getTodayIsoDate());
+  const weekNumbers = [
+    todayWeekNumber - 1,
+    todayWeekNumber,
+    todayWeekNumber + 1,
+  ];
+
+  return weekNumbers.map((weekNumber) => {
+    const week = copiedWeeks.find((w) => w.week === weekNumber);
+    return week ? week : createWeek(weekNumber);
+  });
 }
