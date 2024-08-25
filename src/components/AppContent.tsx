@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import { useToast } from '@/components/ui/use-toast';
 import { useStore } from '@/hooks/useStore';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import TableHead from '@/components/TableHead';
 import Footer from '@/components/Footer';
 import Table from '@/components/Table';
@@ -19,6 +19,9 @@ import {
 export default function AppContent() {
   const { toast } = useToast();
   const [hasChanges, setHasChanges] = useState(false);
+
+  // Reference for Swiper instance
+  const swiperRef = useRef<SwiperType | null>(null);
 
   const updateWeeksInDB = useStore((state) => state.updateWeeksInDB);
   const weeks = useStore((state) => state.weeks);
@@ -147,9 +150,22 @@ export default function AppContent() {
     setSelectedDayDate(findDayDateByIndex(weeks, swiper.activeIndex));
   }
 
+  function handleOnPrevClick() {
+    if (swiperRef.current) {
+      swiperRef.current.slidePrev();
+    }
+  }
+
+  function handleOnNextClick() {
+    if (swiperRef.current) {
+      swiperRef.current.slideNext();
+    }
+  }
+
   return (
     <>
       <Swiper
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
         spaceBetween={0}
         slidesPerView={1}
         style={{ width: '100%', height: '100%' }}
@@ -159,7 +175,11 @@ export default function AppContent() {
         {weeks.map((week) =>
           week.days.map((day) => (
             <SwiperSlide key={day.date + '_table'}>
-              <TableHead day={day.date} />
+              <TableHead
+                onPrevClick={handleOnPrevClick}
+                onNextClick={handleOnNextClick}
+                day={day.date}
+              />
               <Table
                 day={day.date}
                 persons={day.persons}

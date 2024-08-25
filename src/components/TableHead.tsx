@@ -1,11 +1,16 @@
 import { getTodayIsoDate } from '@/lib/utils';
+import ChevronLeft from '@/assets/chevron-left.svg';
+import ChevronRight from '@/assets/chevron-right.svg';
+import colors from 'tailwindcss/colors';
 
 type TableHeadProps = {
   // date in Iso format
   day: string;
+  onPrevClick: () => void;
+  onNextClick: () => void;
 };
 
-function TableHead({ day }: TableHeadProps) {
+function TableHead({ day, onPrevClick, onNextClick }: TableHeadProps) {
   const monthNames = [
     'January',
     'February',
@@ -50,10 +55,32 @@ function TableHead({ day }: TableHeadProps) {
 
   return (
     <div
-      className={`${isToday && 'bg-accent'} flex-col justify-center items-center p-2`}
+      className={`${isToday && 'bg-accent'} flex justify-between items-center px-4`}
     >
-      <h1 className="text-xl text-center">{`${dayName}`}</h1>
-      <h2 className="text-center">{`${dayNumber}. ${month} ${year}`}</h2>
+      <button
+        onClick={onPrevClick}
+        className="grid place-items-center w-14 h-14"
+      >
+        <ChevronLeft
+          width={28}
+          height={28}
+          style={{ fill: colors.white, outline: 'none' }}
+        />
+      </button>
+      <div className="flex-col justify-center items-center p-2">
+        <h1 className="text-xl text-center">{`${dayName}`}</h1>
+        <h2 className="text-center">{`${dayNumber}. ${month} ${year}`}</h2>
+      </div>
+      <button
+        onClick={onNextClick}
+        className="grid place-items-center w-14 h-14"
+      >
+        <ChevronRight
+          width={28}
+          height={28}
+          style={{ fill: colors.white, outline: 'none' }}
+        />
+      </button>
     </div>
   );
 }
