@@ -119,7 +119,7 @@ export function InfoDialog(props: InfoDialogProps) {
           <>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
-            <Button onClick={handleEdit} variant="outline" size="icon">
+            <Button onClick={handleEdit} variant="ghost" size="icon">
               <Pencil className="h-4 w-4" />
             </Button>
           </>
