@@ -1,8 +1,12 @@
-import { getTodayIsoDate } from '@/lib/utils';
+import { getTodayIsoDate, shortenString } from '@/lib/utils';
 import ChevronLeft from '@/assets/chevron-left.svg';
 import ChevronRight from '@/assets/chevron-right.svg';
 import colors from 'tailwindcss/colors';
-import { InfoDialog, InfoDialogProps } from '@/components/InfoDialog';
+import {
+  DEFAULT_TITLE,
+  InfoDialog,
+  InfoDialogProps,
+} from '@/components/InfoDialog';
 
 type TableHeadProps = {
   // date in Iso format
@@ -59,8 +63,11 @@ function TableHead({
   const year = date.getUTCFullYear();
   const dayName = dayNames[date.getUTCDay()];
   const dayNumber = date.getUTCDate();
-
   const isToday = day === getTodayIsoDate();
+
+  const isDefaultTitle = title === DEFAULT_TITLE || !title || title === dayName;
+
+  const shortenedTitle = shortenString(title ?? '');
 
   return (
     <div
@@ -78,14 +85,17 @@ function TableHead({
       </button>
       <div className="relative flex items-center">
         <div className="flex flex-col justify-center items-center p-2">
-          <h1 className="text-xl text-center">{`${dayName}`}</h1>
-          <h2 className="text-center">{`${dayNumber}. ${month} ${year}`}</h2>
+          <h1 className="text-xl text-center truncate">
+            {isDefaultTitle ? `${dayName}` : `${shortenedTitle}`}
+          </h1>
+          <h2 className="text-center">{`${isDefaultTitle ? '' : `${dayName.slice(0, 3)}`} ${dayNumber}. ${month} ${year}`}</h2>
         </div>
         <div className="absolute inset-0 flex justify-center items-center ml-[148px]">
           <InfoDialog
             title={title}
             description={description}
             day={day}
+            dayName={dayName}
             onUpdate={onUpdate}
           />
         </div>

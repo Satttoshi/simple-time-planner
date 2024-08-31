@@ -22,15 +22,18 @@ export type InfoDialogProps = {
   title?: string;
   description?: string;
   day: string;
+  dayName?: string;
   onUpdate?: () => void;
 };
 
-const DEFAULT_TITLE = 'Title';
-const DEFAULT_DESCRIPTION = 'Description';
+export const DEFAULT_TITLE = 'Title';
+const DEFAULT_DESCRIPTION = 'Extra Information';
 
 export function InfoDialog(props: InfoDialogProps) {
   const [editMode, setEditMode] = useState(false);
-  const [title, setTitle] = useState(props.title || DEFAULT_TITLE);
+  const [title, setTitle] = useState(
+    props.title || props.dayName || DEFAULT_TITLE,
+  );
   const [description, setDescription] = useState(
     props.description || DEFAULT_DESCRIPTION,
   );
@@ -38,9 +41,12 @@ export function InfoDialog(props: InfoDialogProps) {
 
   const hasChanges =
     (title !== props.title || description !== props.description) &&
-    (title !== DEFAULT_TITLE || description !== DEFAULT_DESCRIPTION);
+    (title !== DEFAULT_TITLE || description !== DEFAULT_DESCRIPTION) &&
+    title !== props.dayName;
+
   const isDefault =
-    title === DEFAULT_TITLE && description === DEFAULT_DESCRIPTION;
+    (title === DEFAULT_TITLE && description === DEFAULT_DESCRIPTION) ||
+    (title === props.dayName && description === DEFAULT_DESCRIPTION);
 
   function handleEdit() {
     setEditMode(true);
@@ -55,7 +61,7 @@ export function InfoDialog(props: InfoDialogProps) {
 
   function handleOpenChange() {
     if (editMode) {
-      setTitle(props.title || DEFAULT_TITLE);
+      setTitle(props.title || props.dayName || DEFAULT_TITLE);
       setDescription(props.description || DEFAULT_DESCRIPTION);
     }
     if (!isDefault) {
@@ -71,18 +77,21 @@ export function InfoDialog(props: InfoDialogProps) {
             <Ellipsis className="h-8 w-8" />
           </Button>
         ) : (
-          <Button variant="ghost">
-            <Lottie className="h-9 w-9" animationData={animationData} />
-          </Button>
+          <button>
+            <Lottie
+              className={`h-8 w-8 ${props.dayName === title ? '-translate-x-2' : 'translate-x-7'} mt-7`}
+              animationData={animationData}
+            />
+          </button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-[80%]">
+      <DialogContent className="w-5/6">
         {editMode ? (
           <>
             <DialogHeader>
               <DialogTitle className="text-left">edit information</DialogTitle>
               <DialogDescription className="text-left">
-                Update the title and description for today.
+                Update the title and extra information for today.
               </DialogDescription>
             </DialogHeader>
             <Textarea
