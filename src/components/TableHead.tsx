@@ -14,6 +14,8 @@ type TableHeadProps = {
   onPrevClick: () => void;
   onNextClick: () => void;
   onUpdate: () => void;
+  isFirstDay?: boolean;
+  isLastDay?: boolean;
 } & InfoDialogProps;
 
 function TableHead({
@@ -23,6 +25,8 @@ function TableHead({
   title,
   description,
   onUpdate,
+  isFirstDay,
+  isLastDay,
 }: TableHeadProps) {
   const monthNames = [
     'Jan',
@@ -77,11 +81,13 @@ function TableHead({
         onClick={onPrevClick}
         className="grid place-items-center w-14 h-14"
       >
-        <ChevronLeft
-          width={28}
-          height={28}
-          style={{ fill: colors.white, outline: 'none' }}
-        />
+        {!isFirstDay && (
+          <ChevronLeft
+            width={28}
+            height={28}
+            style={{ fill: colors.white, outline: 'none' }}
+          />
+        )}
       </button>
       <div className="relative flex items-center">
         <div className="flex flex-col justify-center items-center p-2">
@@ -104,11 +110,13 @@ function TableHead({
         onClick={onNextClick}
         className="grid place-items-center w-14 h-14"
       >
-        <ChevronRight
-          width={28}
-          height={28}
-          style={{ fill: colors.white, outline: 'none' }}
-        />
+        {!isLastDay && (
+          <ChevronRight
+            width={28}
+            height={28}
+            style={{ fill: colors.white, outline: 'none' }}
+          />
+        )}
       </button>
     </div>
   );
