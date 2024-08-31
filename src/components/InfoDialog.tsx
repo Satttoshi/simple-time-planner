@@ -7,6 +7,7 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
@@ -78,8 +79,14 @@ export function InfoDialog(props: InfoDialogProps) {
       <DialogContent className="max-w-[80%]">
         {editMode ? (
           <>
+            <DialogHeader>
+              <DialogTitle className="text-left">edit information</DialogTitle>
+              <DialogDescription className="text-left">
+                Update the title and description for today.
+              </DialogDescription>
+            </DialogHeader>
             <Textarea
-              className={`mt-6 ${hasChanges && 'border-destructive'}`}
+              className={hasChanges ? 'border-destructive' : ''}
               onChange={(e) => setTitle(e.target.value)}
               value={title}
             />
