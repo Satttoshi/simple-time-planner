@@ -90,6 +90,7 @@ function createDay(dayDate: string): DayData {
   return {
     date: dayDate,
     persons: persons,
+    info: { title: '', description: '' },
   };
 }
 

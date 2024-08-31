@@ -2,28 +2,37 @@ import { getTodayIsoDate } from '@/lib/utils';
 import ChevronLeft from '@/assets/chevron-left.svg';
 import ChevronRight from '@/assets/chevron-right.svg';
 import colors from 'tailwindcss/colors';
+import { InfoDialog, InfoDialogProps } from '@/components/InfoDialog';
 
 type TableHeadProps = {
   // date in Iso format
   day: string;
   onPrevClick: () => void;
   onNextClick: () => void;
-};
+  onUpdate: () => void;
+} & InfoDialogProps;
 
-function TableHead({ day, onPrevClick, onNextClick }: TableHeadProps) {
+function TableHead({
+  day,
+  onPrevClick,
+  onNextClick,
+  title,
+  description,
+  onUpdate,
+}: TableHeadProps) {
   const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
     'May',
     'June',
     'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
   ];
   const dayNames = [
     'Sunday',
@@ -67,9 +76,19 @@ function TableHead({ day, onPrevClick, onNextClick }: TableHeadProps) {
           style={{ fill: colors.white, outline: 'none' }}
         />
       </button>
-      <div className="flex-col justify-center items-center p-2">
-        <h1 className="text-xl text-center">{`${dayName}`}</h1>
-        <h2 className="text-center">{`${dayNumber}. ${month} ${year}`}</h2>
+      <div className="relative flex items-center">
+        <div className="flex flex-col justify-center items-center p-2">
+          <h1 className="text-xl text-center">{`${dayName}`}</h1>
+          <h2 className="text-center">{`${dayNumber}. ${month} ${year}`}</h2>
+        </div>
+        <div className="absolute inset-0 flex justify-center items-center ml-[148px]">
+          <InfoDialog
+            title={title}
+            description={description}
+            day={day}
+            onUpdate={onUpdate}
+          />
+        </div>
       </div>
       <button
         onClick={onNextClick}
