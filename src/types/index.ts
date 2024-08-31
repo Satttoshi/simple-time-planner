@@ -7,8 +7,14 @@ export type TimeSlot = {
 
 export type PersonData = { name: string; timeSlot?: TimeSlot[] };
 
+export type InfoData = {
+  title: string;
+  description: string;
+};
+
 export type DayData = {
   date: string;
+  info: InfoData;
   persons: PersonData[];
 };
 

@@ -29,6 +29,7 @@ export default function AppContent() {
   const getDayFromWeeks = useStore((state) => state.getDayFromWeeks);
   const selectedDayDate = useStore((state) => state.selectedDayDate);
   const setSelectedDayDate = useStore((state) => state.setSelectedDayDate);
+  const setInfoInDay = useStore((state) => state.setInfoInDay);
 
   const initialSwiperIndex = findDayIndexByDate(weeks, getTodayIsoDate());
 
@@ -162,6 +163,15 @@ export default function AppContent() {
     }
   }
 
+  function testFunction() {
+    console.log('TEST');
+    setInfoInDay(
+      { title: 'Test', description: 'Test Description' },
+      '2024-08-30T00:00:00Z',
+    );
+    console.log('weeks', weeks);
+  }
+
   return (
     <>
       <Swiper
@@ -175,6 +185,7 @@ export default function AppContent() {
         {weeks.map((week) =>
           week.days.map((day) => (
             <SwiperSlide key={day.date + '_table'}>
+              <button onClick={() => testFunction()}>TEST</button>
               <TableHead
                 onPrevClick={handleOnPrevClick}
                 onNextClick={handleOnNextClick}
