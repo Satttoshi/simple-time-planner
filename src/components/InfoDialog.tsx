@@ -79,7 +79,7 @@ export function InfoDialog(props: InfoDialogProps) {
         ) : (
           <button>
             <Lottie
-              className={`h-8 w-8 ${props.dayName === title ? '-translate-x-2' : 'translate-x-7'} mt-7`}
+              className={`h-8 w-8 ${props.dayName === title ? '-translate-x-2' : 'translate-x-4 mt-8'}`}
               animationData={animationData}
             />
           </button>
