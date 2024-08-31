@@ -1,10 +1,11 @@
 import { create } from 'zustand';
-import { DayData, PersonData, WeekData } from '@/types';
+import { DayData, InfoData, PersonData, WeekData } from '@/types';
 import { getTodayIsoDate } from '@/lib/utils';
 import { parseWeekRange } from '@/lib/utils';
 
 type StoreState = {
   setPersonsInDay: (persons: PersonData[], day: string) => void;
+  setInfoInDay: (info: InfoData, day: string) => void;
 
   loading: boolean;
 
@@ -29,6 +30,26 @@ export const useStore = create<StoreState>()((set, get) => ({
         return state;
       }
       const newDay = { ...currentDay, persons };
+      const newWeeks = state.weeks.map((week) => {
+        if (week.days.some((d) => d.date === day)) {
+          return {
+            ...week,
+            days: week.days.map((d) => (d.date === day ? newDay : d)),
+          };
+        }
+        return week;
+      });
+      return { weeks: newWeeks };
+    });
+  },
+
+  setInfoInDay: (info, day) => {
+    const currentDay = get().getDayFromWeeks(day);
+    if (!currentDay) {
+      return;
+    }
+    const newDay = { ...currentDay, info };
+    set((state) => {
       const newWeeks = state.weeks.map((week) => {
         if (week.days.some((d) => d.date === day)) {
           return {

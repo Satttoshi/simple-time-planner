@@ -1,6 +1,6 @@
 {
   "name": "simple-time-planner",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,10 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "lottie-react": "^2.4.0",
     "lucide-react": "^0.428.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.2",

@@ -162,6 +162,10 @@ export default function AppContent() {
     }
   }
 
+  function handleInfoUpdate() {
+    setHasChanges(true);
+  }
+
   return (
     <>
       <Swiper
@@ -173,22 +177,32 @@ export default function AppContent() {
         onAfterInit={(swiper: SwiperType) => swiper.slideTo(initialSwiperIndex)}
       >
         {weeks.map((week) =>
-          week.days.map((day) => (
-            <SwiperSlide key={day.date + '_table'}>
-              <TableHead
-                onPrevClick={handleOnPrevClick}
-                onNextClick={handleOnNextClick}
-                day={day.date}
-              />
-              <Table
-                day={day.date}
-                persons={day.persons}
-                onInsertRow={handleInsertRow}
-                onTimeSlotClick={handleTimeSlotClick}
-                selectedDayDate={selectedDayDate}
-              />
-            </SwiperSlide>
-          )),
+          week.days.map((day) => {
+            const isFirstDay = day.date === weeks[0].days[0].date;
+            const isLastDay = day.date === weeks[weeks.length - 1].days[6].date;
+
+            return (
+              <SwiperSlide key={day.date + '_table'}>
+                <TableHead
+                  onPrevClick={handleOnPrevClick}
+                  onNextClick={handleOnNextClick}
+                  day={day.date}
+                  title={day.info?.title}
+                  description={day.info?.description}
+                  onUpdate={handleInfoUpdate}
+                  isFirstDay={isFirstDay}
+                  isLastDay={isLastDay}
+                />
+                <Table
+                  day={day.date}
+                  persons={day.persons}
+                  onInsertRow={handleInsertRow}
+                  onTimeSlotClick={handleTimeSlotClick}
+                  selectedDayDate={selectedDayDate}
+                />
+              </SwiperSlide>
+            );
+          }),
         )}
       </Swiper>
       <Footer

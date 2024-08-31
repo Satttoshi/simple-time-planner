@@ -8,6 +8,16 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
+ * Shorten a string to a max length of 20 characters
+ */
+export function shortenString(str: string): string {
+  if (str.length > 20) {
+    return str.slice(0, 18) + '...';
+  }
+  return str;
+}
+
+/**
  * Get the ISO date of today
  */
 export function getTodayIsoDate() {
@@ -90,6 +100,7 @@ function createDay(dayDate: string): DayData {
   return {
     date: dayDate,
     persons: persons,
+    info: { title: '', description: '' },
   };
 }
 

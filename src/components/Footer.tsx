@@ -29,7 +29,7 @@ export default function Footer({
           Reset day
         </Button>
         {hasChanges && (
-          <span className="text-xs text-ring">Changes detected!</span>
+          <span className="text-xs text-ring">changes detected!</span>
         )}
         <Button
           className="w-24 font-bold"
