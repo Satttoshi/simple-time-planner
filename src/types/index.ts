@@ -14,7 +14,7 @@ export type InfoData = {
 
 export type DayData = {
   date: string;
-  info: InfoData;
+  info?: InfoData;
   persons: PersonData[];
 };
 
