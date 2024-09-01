@@ -128,7 +128,7 @@ export const useStore = create<StoreState>()((set, get) => ({
   selectedDayDate: getTodayIsoDate(),
   setSelectedDayDate: (day) => set({ selectedDayDate: day }),
 
-  password: localStorage.getItem('password') ?? '',
+  password: '',
   setPassword: (password) => {
     localStorage.setItem('password', password);
     set({ password });
