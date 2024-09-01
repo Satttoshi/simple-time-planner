@@ -1,25 +1,25 @@
 'use client';
 
-import AppContent from '@/components/AppContent';
+import Protected from '@/components/Protected';
+import { useEffect, useState } from 'react';
 import { useStore } from '@/hooks/useStore';
-import { useEffect } from 'react';
-import { Toaster } from '@/components/ui/toaster';
-import SkeletonCard from '@/components/SkeletonCard';
+import PasswordForm from '@/components/PasswordForm';
 
 export default function Home() {
-  const loading = useStore((state) => state.loading);
-  const initWeeks = useStore((state) => state.initWeeks);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const validatePassword = useStore((state) => state.validatePassword);
+  const password = useStore((state) => state.password);
 
   useEffect(() => {
-    initWeeks();
-  }, [initWeeks]);
+    async function checkPassword() {
+      if (!password) return;
+      const isAuthenticated = await validatePassword(password);
+      setIsAuthenticated(isAuthenticated);
+    }
 
-  return (
-    <>
-      <main className="bg-background text-foreground h-screen flex flex-col max-w-[800px] mx-auto w-full">
-        {loading ? <SkeletonCard /> : <AppContent />}
-      </main>
-      <Toaster />
-    </>
-  );
+    checkPassword().catch(console.error);
+  }, [password]);
+
+  return isAuthenticated ? <Protected /> : <PasswordForm />;
 }

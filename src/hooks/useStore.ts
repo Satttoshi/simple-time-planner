@@ -20,6 +20,10 @@ type StoreState = {
 
   selectedDayDate: string;
   setSelectedDayDate: (day: string) => void;
+
+  password: string;
+  setPassword: (password: string) => void;
+  validatePassword: (password: string) => Promise<boolean>;
 };
 
 export const useStore = create<StoreState>()((set, get) => ({
@@ -123,4 +127,31 @@ export const useStore = create<StoreState>()((set, get) => ({
 
   selectedDayDate: getTodayIsoDate(),
   setSelectedDayDate: (day) => set({ selectedDayDate: day }),
+
+  password: localStorage.getItem('password') ?? '',
+  setPassword: (password) => {
+    localStorage.setItem('password', password);
+    set({ password });
+  },
+  validatePassword: async (password: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/validate-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ password }),
+      });
+
+      if (!response.ok) {
+        console.error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      return data.valid;
+    } catch (error) {
+      console.error('Error validating password:', error);
+      return false;
+    }
+  },
 }));
