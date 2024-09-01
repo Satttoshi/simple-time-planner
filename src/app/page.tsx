@@ -10,6 +10,11 @@ export default function Home() {
 
   const validatePassword = useStore((state) => state.validatePassword);
   const password = useStore((state) => state.password);
+  const setPassword = useStore((state) => state.setPassword);
+
+  useEffect(() => {
+    setPassword(localStorage.getItem('password') || '');
+  }, []);
 
   useEffect(() => {
     async function checkPassword() {
