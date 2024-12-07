@@ -34,7 +34,7 @@ const StatusSelectors = ({ onStatusSelection }: StatusSelectorsProps) => {
   };
 
   return (
-    <div className="flex gap-8 max-w-[500px] w-full py-4 px-8">
+    <div className="flex gap-8 max-w-[500px] w-full pt-4 pb-1 px-8">
       <button
         onClick={() => handleStatusClick('ready')}
         className={getButtonStyles('ready')}
