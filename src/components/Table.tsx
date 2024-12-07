@@ -18,7 +18,7 @@ export function getStatusColor(status: Status): string {
   }
 }
 
-const baseCellStyle = 'border rounded-md grid place-items-center h-20';
+export const baseCellStyle = 'border rounded-md grid place-items-center h-20';
 
 type TableProps = {
   day: string;

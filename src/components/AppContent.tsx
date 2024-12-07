@@ -19,6 +19,7 @@ import {
 export default function AppContent() {
   const { toast } = useToast();
   const [hasChanges, setHasChanges] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<Status>('init');
 
   // Reference for Swiper instance
   const swiperRef = useRef<SwiperType | null>(null);
@@ -31,6 +32,11 @@ export default function AppContent() {
   const setSelectedDayDate = useStore((state) => state.setSelectedDayDate);
 
   const initialSwiperIndex = findDayIndexByDate(weeks, getTodayIsoDate());
+
+  function handleStatusSelection(status: Status) {
+    console.log('Selected status:', status);
+    setSelectedStatus(status);
+  }
 
   function handleTimeSlotClick(
     persons: PersonData[],
@@ -209,6 +215,7 @@ export default function AppContent() {
         onUpdateDB={handleUpdateDB}
         onResetTimeslots={handleResetTimeslots}
         hasChanges={hasChanges}
+        onStatusSelection={handleStatusSelection}
       />
     </>
   );
