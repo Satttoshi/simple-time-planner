@@ -1,21 +1,26 @@
 import { Button } from '@/components/ui/button';
 import { useStore } from '@/hooks/useStore';
+import StatusSelectors from '@/components/StatusSelectors';
+import { Status } from '@/types';
 
 type TableActionsProps = {
   hasChanges: boolean;
   onUpdateDB?: () => void;
   onResetTimeslots?: (day: string) => void;
+  onStatusSelection?: (status: Status) => void;
 };
 
 export default function Footer({
   hasChanges,
   onUpdateDB,
   onResetTimeslots,
+  onStatusSelection,
 }: TableActionsProps) {
   const selectedDayDate = useStore((state) => state.selectedDayDate);
 
   return (
     <div className="z-50 w-full bg-accent fixed bottom-0 left-0 right-0 grid place-items-center">
+      <StatusSelectors onStatusSelection={onStatusSelection} />
       <div className="max-w-[500px] w-full pb-4 pt-4 px-8 flex items-center justify-between">
         <Button
           className="w-24"

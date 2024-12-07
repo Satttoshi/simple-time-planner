@@ -18,7 +18,7 @@ export function getStatusColor(status: Status): string {
   }
 }
 
-const baseCellStyle = 'border rounded-md grid place-items-center h-20';
+export const baseCellStyle = 'border rounded-md grid place-items-center h-20';
 
 type TableProps = {
   day: string;
@@ -75,7 +75,7 @@ export default function Table({
 
         {/* Row 2...n Time Slots */}
         <div
-          className={`grid h-[calc(100vh-246px)] w-[calc(100%+7px)] grid-cols-6 grid-rows-${timeArray.length} gap-1 auto-rows-max justify-start content-star overflow-y-scroll scrollbar-custom`}
+          className={`grid h-[calc(100vh-311px)] w-[calc(100%+7px)] grid-cols-6 grid-rows-${timeArray.length} gap-1 auto-rows-max justify-start content-star overflow-y-scroll scrollbar-custom`}
         >
           {timeArray.map((time, i) => (
             <Fragment key={i + '-fragment'}>
