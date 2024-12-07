@@ -70,7 +70,9 @@ export default function AppContent() {
         break;
     }
 
-    newPersons[personIndex].timeSlot[timeSlotIndex].status = nextStatus;
+    newPersons[personIndex].timeSlot[timeSlotIndex].status =
+      // If a status selection was made in the panel, use that status, otherwise use the next status
+      selectedStatus === 'init' ? nextStatus : selectedStatus;
     setHasChanges(true);
 
     setPersonsInDay(newPersons, day);
