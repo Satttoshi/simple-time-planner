@@ -123,12 +123,25 @@ function createWeek(weekNumber: number): WeekData {
  */
 export function parseWeekRange(weeks: WeekData[]): WeekData[] {
   const copiedWeeks = [...weeks];
-
+  const today = new Date();
   const todayWeekNumber = getWeekNumberByDate(getTodayIsoDate());
+
+  // Get day of week (0 = Sunday, 1 = Monday, ..., 5 = Friday, 6 = Saturday)
+  const dayOfWeek = today.getDay();
+
+  // Set how many weeks ahead to create
+  let weeksAhead = 1; // Default is 1 week ahead
+
+  // If it's Friday, Saturday, or Sunday, create 2 weeks ahead
+  if (dayOfWeek >= 5 || dayOfWeek === 0) {
+    weeksAhead = 2;
+  }
+
+  // Create an array with the week numbers we want to have, including future weeks
   const weekNumbers = [
-    todayWeekNumber - 1,
-    todayWeekNumber,
-    todayWeekNumber + 1,
+    todayWeekNumber - 1, // Previous week
+    todayWeekNumber, // Current week
+    ...Array.from({ length: weeksAhead }, (_, i) => todayWeekNumber + i + 1), // Future weeks
   ];
 
   return weekNumbers.map((weekNumber) => {
