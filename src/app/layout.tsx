@@ -5,7 +5,7 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'venary time planner',
+  title: 'Reveal TACTX Planner',
   description: 'weekly planning for teammates',
 };
 
