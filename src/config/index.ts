@@ -6,7 +6,7 @@ type Config = {
 };
 
 export const defaultConfig: Config = {
-  persons: ['Smu', 'Toby', 'Tom', 'Denis', 'Josh'],
+  persons: ['TBA', 'Toby', 'Tom', 'Denis', 'Josh'],
   // don't use Timeslot[] here, because it will be a reference to the same object
   timeSlots: [
     { time: '19:00', status: 'init' },

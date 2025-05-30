@@ -144,12 +144,25 @@ export default function AppContent() {
     setPersonsInDay(newPersons, day);
   }
 
+  function randomDescription() {
+    const descriptions = [
+      'Toby wollte wieder zuviel',
+      'Tabletten Tom lurkt in Smoke',
+      'Denis muss Freundin ins Bett bringen',
+      'Denis ist rot wenn Toby grün ist',
+      'yuuuuuuush',
+      'Montag 13 Uhr ist gottlos',
+    ];
+
+    return descriptions[Math.floor(Math.random() * descriptions.length)];
+  }
+
   function handleUpdateDB() {
     setHasChanges(false);
     updateWeeksInDB();
     toast({
       title: 'Update Successful',
-      description: 'Smu die Kuh',
+      description: randomDescription(),
       duration: 3000,
     });
   }
